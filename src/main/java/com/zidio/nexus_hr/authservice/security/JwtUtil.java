@@ -18,11 +18,11 @@ import java.util.Map;
 public class JwtUtil {
 
     //get the jwt secret key from the environment varriable
-    @Value("${JWT_SECRETE}") String secretKey;
+    @Value("${app.jwt.secret}") String secretKey;
 
 
     //get the expiration time from the environment varriable
-    @Value("${JWT_EXPIRATION}") long expiration;
+    @Value("${app.jwt.expiration}") long expiration;
 
     @PostConstruct
     public void testConfig() {
