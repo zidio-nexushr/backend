@@ -1,9 +1,10 @@
-package com.zidio.nexus_hr.security;
+package com.zidio.nexus_hr.authservice.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
+
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.security.Keys;
@@ -14,16 +15,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@RequiredArgsConstructor
 public class JwtUtil {
 
     //get the jwt secret key from the environment varriable
-    @Value("${app.jwt.secret}")
-    private String secretKey;
+    @Value("${JWT_SECRETE}") String secretKey;
+
 
     //get the expiration time from the environment varriable
-    @Value("${app.jwt.expiration}")
-    private long expiration;
+    @Value("${JWT_EXPIRATION}") long expiration;
+
+    @PostConstruct
+    public void testConfig() {
+        System.out.println("Secret: " + secretKey);
+        System.out.println("Expiration: " + expiration);
+    }
 
     //encode secrete key
     private SecretKey getSigningKey() {

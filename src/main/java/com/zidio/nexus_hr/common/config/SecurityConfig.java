@@ -1,8 +1,9 @@
-package com.zidio.nexus_hr.config;
+package com.zidio.nexus_hr.common.config;
 
 
-import com.zidio.nexus_hr.security.JWTAuthFilter;
+import com.zidio.nexus_hr.authservice.security.JWTAuthFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +24,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JWTAuthFilter jwtAuthFilter;
+    @Autowired
+    JWTAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
