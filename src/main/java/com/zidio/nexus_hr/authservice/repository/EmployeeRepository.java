@@ -27,12 +27,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     List<Employee> findByManagerId(String managerId);
 
-    @Query("SELECT e FROM Employee e WHERE " +
-           "LOWER(e.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-           "LOWER(e.lastName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-           "LOWER(e.email) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    Page<Employee> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
-
     @Query("SELECT COUNT(e) FROM Employee e WHERE e.department.id = :departmentId AND e.status = 'ACTIVE'")
     long countActiveByDepartment(@Param("departmentId") String departmentId);
 }
