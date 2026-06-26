@@ -1,4 +1,5 @@
 package com.zidio.nexus_hr.authservice.entity;
+import com.zidio.nexus_hr.authservice.Enum.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
