@@ -1,9 +1,11 @@
 package com.zidio.nexus_hr.authservice.security;
 
+import com.zidio.nexus_hr.authservice.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
+import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,17 +20,12 @@ import java.util.Map;
 public class JwtUtil {
 
     //get the jwt secret key from the environment varriable
-    @Value("${app.jwt.secret}") String secretKey;
-
+    @Value("${app.jwt.secret}")
+    private String secretKey;
 
     //get the expiration time from the environment varriable
-    @Value("${app.jwt.expiration}") long expiration;
-
-    @PostConstruct
-    public void testConfig() {
-        System.out.println("Secret: " + secretKey);
-        System.out.println("Expiration: " + expiration);
-    }
+    @Value("${app.jwt.expiration}")
+    private long expiration;
 
     //encode secrete key
     private SecretKey getSigningKey() {
@@ -38,16 +35,16 @@ public class JwtUtil {
 
 
     //generate token
-    public String generateToken(String email, String role) {
+    public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role);
+        claims.put("role", user.getRole());
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(email)
+                .subject(user.getEmail())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey())
+                .signWith(getSigningKey(), SignatureAlgorithm.ES256)
                 .compact();
     }
 
