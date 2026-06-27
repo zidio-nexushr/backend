@@ -6,20 +6,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-import java.util.List;
 
 @Component
-public class JWTAuthFilter extends OncePerRequestFilter {
+public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    JwtUtil jwtUtil;
 
+    private JwtUtil jwtUtil;
+
+    private CustomeUserDetailsService customeUserDetailsService;
+
+    public JWTAuthenticationFilter(JwtUtil jwtUtil, CustomeUserDetailsService customeUserDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.customeUserDetailsService = customeUserDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -42,14 +47,13 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         //Get the email and role
         String email = jwtUtil.extractEmail(token);
-        String role = jwtUtil.extractRole(token);
+        UserDetails userDetails = customeUserDetailsService.loadUserByEmail(email);
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
-                        email,
+                        userDetails,
                         null,
-                        List.of(new SimpleGrantedAuthority("ROLE_" + role))
-                );
+                        userDetails.getAuthorities());
 
         authentication.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(request)

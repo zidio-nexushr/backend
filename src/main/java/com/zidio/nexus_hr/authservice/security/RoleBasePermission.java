@@ -7,7 +7,8 @@ import java.util.*;
 
 
 public class RoleBasePermission {
-    private final Map<Role, Set<Permission>> getRolePermission(){
+
+    public static Map<Role, Set<Permission>> getRolePermission(){
 
         Map<Role, Set<Permission>> role_permission = new HashMap<>();
 
