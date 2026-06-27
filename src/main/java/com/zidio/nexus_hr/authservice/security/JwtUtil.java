@@ -1,5 +1,6 @@
 package com.zidio.nexus_hr.authservice.security;
 
+import com.zidio.nexus_hr.authservice.Enum.Permission;
 import com.zidio.nexus_hr.authservice.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -15,6 +16,8 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -37,14 +40,19 @@ public class JwtUtil {
     //generate token
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", user.getRole());
+        claims.put("role", user.getRole().name());
+
+        Set<Permission> permissions = RoleBasePermission.getRolePermission().get(user.getRole());
+        claims.put("permissions", permissions.stream()
+                .map(Permission::name)
+                .collect(Collectors.toList()));
 
         return Jwts.builder()
                 .claims(claims)
                 .subject(user.getEmail())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.ES256)
+                .signWith(getSigningKey())
                 .compact();
     }
 
@@ -57,10 +65,7 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    //get the role from the payload
-    public String extractRole(String token) {
-        return parseClaims(token).get("role", String.class);
-    }
+
 
     //check if the token is valid
     public boolean isTokenValid(String token) {
