@@ -1,0 +1,90 @@
+package com.zidio.nexus_hr.authservice.entity;
+
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "email_los")
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class EmailLog {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String recipientEmail;
+    private String subject;
+
+    @Column(length = 10000)
+    private String body;
+
+    private boolean sentStatus;
+    private LocalDateTime sentAt = LocalDateTime.now();
+
+    //constructor
+
+    public EmailLog(String recipientEmail, String subject, String body, boolean sentStatus) {
+        this.recipientEmail = recipientEmail;
+        this.subject = subject;
+        this.body = body;
+        this.sentStatus = sentStatus;
+    }
+
+
+    //getter and setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public boolean isSentStatus() {
+        return sentStatus;
+    }
+
+    public void setSentStatus(boolean sentStatus) {
+        this.sentStatus = sentStatus;
+    }
+
+    public LocalDateTime getSentAt() {
+        return sentAt;
+    }
+
+    public void setSentAt(LocalDateTime sentAt) {
+        this.sentAt = sentAt;
+    }
+}
