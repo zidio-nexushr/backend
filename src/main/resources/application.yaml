@@ -13,7 +13,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -43,3 +43,7 @@ app:
 
   frontend:
     url: ${FRONTEND_URL:http://localhost:8081}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
