@@ -1,9 +1,11 @@
 package com.zidio.nexus_hr.authservice.controller;
 
+import com.zidio.nexus_hr.authservice.dto.LoginRequest;
 import com.zidio.nexus_hr.authservice.dto.RegisterRequest;
 import com.zidio.nexus_hr.authservice.dto.RegisterResponse;
 import com.zidio.nexus_hr.authservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,5 +21,14 @@ public class AuthController {
         System.out.println(">>> Register endpoint called <<<");
 
         return authService.register(request);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+
+        String token = authService.authenticateUser(
+                request.getUsername(),
+                request.getPassword());
+
+        return ResponseEntity.ok(token);
     }
 }

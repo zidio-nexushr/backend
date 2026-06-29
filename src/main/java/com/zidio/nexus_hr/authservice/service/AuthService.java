@@ -6,6 +6,10 @@ import com.zidio.nexus_hr.authservice.entity.User;
 import com.zidio.nexus_hr.authservice.repository.UserRepository;
 import com.zidio.nexus_hr.authservice.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,12 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -49,5 +59,16 @@ public class AuthService {
                 .token(token)
                 .build();
     }
+    public String authenticateUser(String username, String password) {
 
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+        );
+
+        UserDetails userDetails =
+                userDetailsService.loadUserByUsername(username);
+
+        return jwtUtil.generateToken(userDetails);
+    }
 }
+
