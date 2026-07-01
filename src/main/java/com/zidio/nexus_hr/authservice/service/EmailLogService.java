@@ -1,6 +1,7 @@
 package com.zidio.nexus_hr.authservice.service;
 
 import com.zidio.nexus_hr.authservice.dto.EmailLogDTO;
+import com.zidio.nexus_hr.authservice.dto.ForgotPasswordDTO;
 import com.zidio.nexus_hr.authservice.entity.EmailLog;
 import com.zidio.nexus_hr.authservice.repository.EmailLogReposity;
 import jakarta.mail.internet.MimeMessage;
@@ -64,6 +65,7 @@ public class EmailLogService {
 
         return sentStatus?"Email sent successfully":"Email sending failed";
     }
+
 
 
 }

@@ -3,6 +3,9 @@ import com.zidio.nexus_hr.authservice.Enum.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+import java.util.UUID;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -30,6 +33,13 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private String resetToken;
+    private Date resetTokenExpiry;
+
+
+
+
 
     //getter and setters
     public Long getId() {

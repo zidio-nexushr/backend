@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     private CustomeUserDetailsService customeUserDetailsService;
+
+    @Autowired
+    private TokenBlockService tokenBlockService;
 
     public JWTAuthenticationFilter(JwtUtil jwtUtil, CustomeUserDetailsService customeUserDetailsService) {
         this.jwtUtil = jwtUtil;
@@ -59,6 +63,11 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        if (tokenBlockService.isBlockToken(token)){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token is logged out");
+        }
         filterChain.doFilter(request, response);
     }
 
