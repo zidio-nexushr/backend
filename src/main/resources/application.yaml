@@ -6,14 +6,21 @@ spring:
     name: auth-service
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://ep-mute-poetry-amyvhz5r-pooler.c-5.us-east-1.aws.neon.tech/neondb}
+    url: ${DB_URL:jdbc:postgresql://ep-sweet-pond-atimv41l-pooler.c-9.us-east-1.aws.neon.tech/neondb}
     username: ${DB_USERNAME:neondb_owner}
-    password: ${DB_PASSWORD:npg_8JgqyVvpm6wl}
+    password: ${DB_PASSWORD:npg_nDcyrdJaX23P}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      max-lifetime: 600000
+      connection-timeout: 30000
+      idle-timeout: 300000
+      keepalive-time: 60000
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
@@ -36,6 +43,11 @@ spring:
           starttls:
             enable: true
 
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+
 app:
   jwt:
     secret: ${JWT_SECRET:your-very-long-and-secure-secret-key-at-least-256-bits}
@@ -47,3 +59,4 @@ app:
 logging:
   level:
     org.springframework.security: DEBUG
+

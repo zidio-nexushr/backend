@@ -6,10 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
-import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.security.Keys;
 
@@ -39,18 +36,18 @@ public class JwtUtil {
 
 
     //generate token
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userDetails.getRole().name());
+        claims.put("role", user.getRole().name());
 
-        Set<Permission> permissions = RoleBasePermission.getRolePermission().get(userDetails.getRole());
+        Set<Permission> permissions = RoleBasePermission.getRolePermission().get(user.getRole());
         claims.put("permissions", permissions.stream()
                 .map(Permission::name)
                 .collect(Collectors.toList()));
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(userDetails.getEmail())
+                .subject(user.getEmail())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey())
