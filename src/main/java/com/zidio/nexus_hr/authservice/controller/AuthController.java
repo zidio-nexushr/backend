@@ -1,9 +1,9 @@
 package com.zidio.nexus_hr.authservice.controller;
 
-import com.zidio.nexus_hr.authservice.dto.LoginRequest;
-import com.zidio.nexus_hr.authservice.dto.RegisterRequest;
-import com.zidio.nexus_hr.authservice.dto.AuthResponse;
+import com.zidio.nexus_hr.authservice.dto.*;
 import com.zidio.nexus_hr.authservice.service.AuthService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +17,28 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-
-        System.out.println(">>> Register endpoint called <<<");
-
         return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok("Login successfully");
+        return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/forgot_password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+        authService.forgotPasswrord(forgotPasswordDTO);
+        return ResponseEntity.ok("Reset password link sent to Email");
+    }
+
+    @PostMapping("/reset_password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
+        authService.resetPassword(resetPasswordDTO);
+        return ResponseEntity.ok("Reset password successful");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        return ResponseEntity.ok(authService.logout(request));
     }
 }

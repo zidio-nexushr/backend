@@ -80,4 +80,13 @@ public class JwtUtil {
     public String extractEmail(String token) {
         return parseClaims(token).getSubject();
     }
+
+    //extract token
+    public String extractToken(String hearder){
+        if(hearder != null && hearder.startsWith("Bearer ")){
+            return hearder.substring(7);
+        }
+
+        return null;
+    }
 }
